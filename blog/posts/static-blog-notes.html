@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>静态博客的更新与部署笔记 · gpgz</title>
+<meta name="description" content="纯 HTML 写法、目录约定，以及以后文章该怎么加。">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="/">← 返回文章列表</a>
+<article>
+<header class="hero">
+  <div class="meta">2026-11-25 · 维护</div>
+  <h1>静态博客的更新与部署笔记</h1>
+  <p class="lead">纯 HTML 写法、目录约定，以及以后文章该怎么加。</p>
+</header>
+
+<p>这个博客没有生成器，文章就是写好的 HTML。好处是改完立刻能看到效果，坏处是要自己维护几处重复的结构。</p>
+
+<h2>目录约定</h2>
+<pre><code>blog/
+  index.html            文章列表
+  about.html            关于页
+  404.html              404 页面
+  assets/style.css      全站样式
+  posts/*.html          每篇文章一个文件</code></pre>
+
+<h2>加一篇文章</h2>
+<ol>
+  <li>在 <code>posts/</code> 下新建一个 HTML 文件，复用现有文章的骨架。</li>
+  <li>在 <code>index.html</code> 的文章列表里加一条，日期、标题、摘要和标签都要写。</li>
+  <li>提交到 <code>main</code> 分支，Pages 会自动重新部署。</li>
+</ol>
+
+<h2>本地预览</h2>
+<p>在 <code>blog/</code> 目录下起一个静态服务器即可，不需要安装任何构建工具：</p>
+<pre><code>python -m http.server 8000</code></pre>
+<p>然后打开 <code>http://localhost:8000/</code>。注意样式表用的是根路径 <code>/assets/style.css</code>，所以要从 <code>blog/</code> 作为站点根目录启动。</p>
+
+<h2>部署路径</h2>
+<p>仓库里的 <code>blog/</code> 是源码，Cloudflare Pages 发布目录也设为 <code>blog</code>。GitHub Pages 仍然从仓库根目录发布原来的个人主页，两者读的是同一份代码但发布不同目录，互不覆盖。</p>
+</article>
+<footer>© 2026 xiguahaha · <a href="/">文章列表</a></footer>
+</div>
+</body>
+</html>
