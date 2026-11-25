@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>主域名的用途，以及怎么安全地接上 Pages · gpgz</title>
+<meta name="description" content="邮件路由和两个 Workers 都在跑，加博客时哪些东西绝对不能碰。">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="/">← 返回文章列表</a>
+<article>
+<header class="hero">
+  <div class="meta">2026-11-25 · 折腾记录</div>
+  <h1>主域名的用途，以及怎么安全地接上 Pages</h1>
+  <p class="lead">邮件路由和两个 Workers 都在跑，加博客时哪些东西绝对不能碰。</p>
+</header>
+
+<p><code>gpgz.dpdns.org</code> 看起来只是个免费子域名，但上面其实挂着几样正在用的东西。直接改根解析很容易把其中一项弄坏，所以动手前先把用途列清楚。</p>
+
+<h2>已经在跑的三块</h2>
+<ol>
+  <li><strong>邮件路由</strong>：根域和 <code>xigua</code> 子域开启了 Cloudflare Email Routing，MX、SPF、DKIM、DMARC 一整套都在，邮件转发到常用邮箱。</li>
+  <li><strong>Workers 代理</strong>：<code>sstp</code> 通过自定义域名绑定到一个家庭 VPN 入口 Worker，<code>edt</code> 通过路由绑定到另一个测试 Worker。</li>
+  <li><strong>没有网站</strong>：根域原本没有 A / AAAA / CNAME 记录，Cloudflare 账号里也没有 Pages 项目。</li>
+</ol>
+
+<h2>接入 Pages 的做法</h2>
+<p>把博客文件放在仓库的 <code>blog/</code> 目录，Cloudflare Pages 项目只发布这个目录，构建命令留空。自定义域名填根域，Pages 会在同一个 Cloudflare 账号的 zone 里自动补上解析。</p>
+
+<pre><code>仓库：xiguahahaha/xiguahahaha.github.io
+发布目录：blog
+生产分支：main
+自定义域名：gpgz.dpdns.org</code></pre>
+
+<h2>绝对不要动的东西</h2>
+<div class="card">
+  <ul style="margin:0">
+    <li>MX / SPF / DKIM / DMARC 那几条记录</li>
+    <li><code>sstp</code>、<code>edt</code> 的 DNS 记录</li>
+    <li>Workers 的路由和自定义域名绑定</li>
+  </ul>
+</div>
+<p>根域加一条指向 Pages 的记录不会和 MX 冲突；DNS 里不同类型、不同名称的记录可以共存。真正危险的是“顺手清理”看起来没用的 TXT 和 MX。</p>
+
+<h2>一点长期考虑</h2>
+<p>免费子域名的归属不在自己手里，适合练手和过渡。如果这个博客要长期写下去，后面还是应该换一个自己注册的真域名，再把 Pages 的自定义域名改过去。</p>
+</article>
+<footer>© 2026 xiguahaha · <a href="/">文章列表</a></footer>
+</div>
+</body>
+</html>
